@@ -6,7 +6,7 @@ from qutip_utils import get_random_local_measurements
 
 numpy_seed = 3
 np.random.seed(3)
-Nsamp = int(1E1)
+Nsamp = int(1E4)
 
 STATEDIR = "/home/btimar/data/states/qutip"
 DATADIR = "/home/btimar/data/random_unitary_samples/from_qutip_states"

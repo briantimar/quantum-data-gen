@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=sampling
-#SBATCH --nodes=20
-#SBATCH --ntasks-per-node=1
+#SBATCH --nodes=10
+#SBATCH --ntasks-per-node=2
 #SBATCH --output=/home/btimar/data/sampling.out
-#SBATCH --time=168:00:00
+#SBATCH --time=17:00:00
 
 date
 module load python
