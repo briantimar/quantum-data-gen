@@ -141,10 +141,7 @@ def construct_joint_distribution(pauli_list, rho):
         probs = (2^L,) array whose kth entry is the probability of observing the kth
     bit pattern.
         outcomes = (2^L, L) array holding the corresponding +-1 bit patterns"""
-    try:
-        from datagen.tools import generate_binary_space
-    except ImportError:
-        from tools import generate_binary_space
+    from tools import generate_binary_space
     L = get_L(rho)
     if len(pauli_list) != L:
         raise ValueError("Expecting one pauli per site, got: %d" %
