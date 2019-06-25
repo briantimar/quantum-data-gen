@@ -1,7 +1,7 @@
 """ Some hamiltonian constructors in qutip"""
 import qutip as qt
 import numpy as np
-
+from qutip utils import embed, n
 
 def dist1d(i, j, L, bc='open'):
     """Distance between two lattice sites on a 1d chain.
@@ -28,7 +28,6 @@ def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
         Returns: QObj representing the hamiltonian"""
 
     #start with the laser terms
-    from qutip_utils import embed, n
     h = sum([-Delta * embed([n()], L, [i]) for i in range(L)])
     h += sum([-(Omega/2.0) * embed([qt.sigmax()], L, [i]) for i in range(L)])
 
@@ -40,4 +39,16 @@ def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
             if d <= ktrunc:
                 coupling = V / d**6
                 h += coupling * embed([n(), n()], L, [i, j])
+    return h
+
+def tfim_1d(L, hz, hz, J, bc='open'):
+    """ A transverse-field ising model in one dimension.
+    H = -hz sum(z) -hx sum(x) - Jsum(z_i z_i+1) """
+    hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L))
+    hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L))
+    h = hx + hz
+
+    coupmax = L-2 if bc=='open' else L-1
+    for i in range(coupmax):
+        h += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
     return h
