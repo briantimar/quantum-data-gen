@@ -1,7 +1,7 @@
 """ Some hamiltonian constructors in qutip"""
 import qutip as qt
 import numpy as np
-from qutip utils import embed, n
+from qutip_utils import embed, n
 
 def dist1d(i, j, L, bc='open'):
     """Distance between two lattice sites on a 1d chain.
@@ -16,7 +16,7 @@ def dist1d(i, j, L, bc='open'):
     raise NotImplementedError
 
 
-def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
+def rydberg_hamiltonian_1d(param_dict, bc='open'):
     """ A 1d rydberg hamiltonian implemented as QObj.
         L: the number of qubits.
         Delta: the laser detuning / long. field
@@ -26,6 +26,12 @@ def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
         bc: the boundary conditions.
 
         Returns: QObj representing the hamiltonian"""
+
+    L = param_dict['L']
+    Delta = param_dict['Delta']
+    Omega = param_dict['Omega']
+    V = param_dict['V']
+    ktrunc = param_dict['ktrunc']
 
     #start with the laser terms
     h = sum([-Delta * embed([n()], L, [i]) for i in range(L)])
@@ -41,22 +47,32 @@ def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
                 h += coupling * embed([n(), n()], L, [i, j])
     return h
 
-def tfim_1d(L, hz, hz, J, bc='open'):
+def tfim_1d(param_dict, bc='open'):
     """ A transverse-field ising model in one dimension.
     H = -hz sum(z) -hx sum(x) - Jsum(z_i z_i+1) """
-    hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L)])
-    hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L)])
-    h = hx + hz
+
+    L = param_dict['L']
+    hz = param_dict['hz']
+    hx = param_dict['hx']
+    J = param_dict['J']
+
+    Hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L)])
+    Hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L)])
+    H = Hz + Hx
 
     coupmax = L-2 if bc=='open' else L-1
     for i in range(coupmax):
-        h += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
+        H += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
     return h
 
-def heisenberg_1d(L, J, bc='open'):
+def heisenberg_1d(param_dict, bc='open'):
     """ A heisenberg model in one dimension.
         H = -J sum si . s_i+1
     """
+
+    L = param_dict['L']
+    J = param_dict['J']
+
     coupmax = L-2 if bc=='open' else L-1
     pauli_x = [ embed([qt.sigmax(), qt.sigmax()], L, [i, i+1]) for i in range(coupmax)]
     pauli_y = [ embed([qt.sigmay(), qt.sigmay()], L, [i, i+1]) for i in range(coupmax)]
