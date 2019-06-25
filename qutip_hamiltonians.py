@@ -63,7 +63,7 @@ def tfim_1d(param_dict, bc='open'):
     coupmax = L-2 if bc=='open' else L-1
     for i in range(coupmax):
         H += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
-    return h
+    return H
 
 def heisenberg_1d(param_dict, bc='open'):
     """ A heisenberg model in one dimension.
