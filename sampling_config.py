@@ -8,8 +8,8 @@ numpy_seed = 3
 np.random.seed(3)
 Nsamp = int(1E1)
 
-STATEDIR = "/nfs/unity/unixhome/btimar/data/states/qutip"
-DATADIR = "/nfs/unity/unixhome/btimar/data/random_unitary_samples/from_qutip_states"
+STATEDIR = "/home/btimar/data/states/qutip"
+DATADIR = "/home/btimar/data/random_unitary_samples/from_qutip_states"
 
 with open( os.path.join(STATEDIR, 'settings.json')) as f:
     settings = json.load(f)
@@ -27,8 +27,6 @@ def get_output_path(state_name, L):
     return os.path.join(DATADIR, "{0}_L={1}".format(state_name, L))
 
 def write_config():
-    print("Using system sizes {0}...".format(system_sizes))
-    print("... for states {0}".format(state_names))
 
     with open(os.path.join(DATADIR, 'settings.json'), 'w') as f:
         data_settings = dict(params=settings['params'], system_sizes=system_sizes, 

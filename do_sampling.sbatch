@@ -5,6 +5,7 @@
 #SBATCH --output=/home/btimar/data/python-multiproc.out
 #SBATCH --time=0:01:00
 
+module load python
 python sampling_config.py
 
 for L in 2; do
