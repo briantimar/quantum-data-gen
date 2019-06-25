@@ -65,27 +65,11 @@ def heisenberg_1d(L, J, bc='open'):
     return -J * (1/4) * (sum(pauli_x) + sum(pauli_y) + sum(pauli_z))
 
 
-# def xy_1d(L ):
-#     """ Returns local terms, without coupling coefficients, that make up the XY hamiltonian.
-#         returns: Hx, Hz, HPM
-#         Hx = list of pauli X's
-#         Hz = list of Pauli Z's
-#         HPM = list of sigma_plus * sigma_minus """
+hamiltonian_constructors = { 'rydberg': rydberg_hamiltonian_1d, 
+                              'tfim': tfim_1d, 
+                              'heisenberg': heisenberg_1d }
 
-#     I=qt.tensor([qt.qeye(2)] * N)
-#     c=list(it.combinations(range(N), 2))
-#     Hz,Hx, HPM=[0 * I for x in range(N)],[0 * I for x in range(N)], [0 * I for x in c]
-#     for i in range(N):
-#         l=[qt.qeye(2)] * N
-#         l[i]=qt.sigmaz()
-#         Hz[i]=qt.tensor(l).data.todense()
-#         l[i]=qt.sigmax()
-#         Hx[i]=qt.tensor(l).data.todense()
-#     for s in range(len(c)):
-#         i, j=c[s]
-#         l=[qt.qeye(2)] * N
-#         l[i]=qt.sigmap()
-#         l[j]=qt.sigmam()
-#         HPM[s]=qt.tensor(l).data.todense()
-#         HPM[s]+=np.conjugate(np.transpose(HPM[s]))
-#     return Hx,Hz, HPM
+def get_hamiltonian(name, *args):
+    if name not in hamiltonian_constructors.keys():
+        raise NotImplementedError
+    return hamiltonian_constructors[name](*args)
