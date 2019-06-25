@@ -26,13 +26,14 @@ def get_state(state_name, L):
 def get_output_path(state_name, L):
     return os.path.join(DATADIR, "{0}_L={1}".format(state_name, L))
 
-print("Using system sizes {0}...".format(system_sizes))
-print("... for states {0}".format(state_names))
+def write_config():
+    print("Using system sizes {0}...".format(system_sizes))
+    print("... for states {0}".format(state_names))
 
-with open(os.path.join(DATADIR, 'settings.json'), 'w') as f:
-    data_settings = dict(params=settings['params'], system_sizes=system_sizes, 
-                    state_names=state_names, state_dir=STATEDIR, Nsamp=Nsamp)
-    json.dump(data_settings, f)
+    with open(os.path.join(DATADIR, 'settings.json'), 'w') as f:
+        data_settings = dict(params=settings['params'], system_sizes=system_sizes, 
+                        state_names=state_names, state_dir=STATEDIR, Nsamp=Nsamp)
+        json.dump(data_settings, f)
 
 def sample_from_state(L, state_name):
     print("Generating data for system size {0}, state {1}".format(
@@ -44,6 +45,6 @@ def sample_from_state(L, state_name):
     np.save(path + "_settings", settings)
     np.save(path + "_samples", samples)
 
-for L in system_sizes:
-    for state_name in state_names:
-        sample_from_state(L, state_name)
+
+if __name__=='__main__':
+    write_config()
