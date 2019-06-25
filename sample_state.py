@@ -5,4 +5,4 @@ import sys
 if __name__=='__main__':
     L = sys.argv[1]
     state_name = sys.arg[2]
-    print(L, state_name)
+    sample_from_state(L, state_name)

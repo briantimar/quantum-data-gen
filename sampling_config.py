@@ -6,10 +6,10 @@ from qutip_utils import get_random_local_measurements
 
 numpy_seed = 3
 np.random.seed(3)
-Nsamp = int(1E5)
+Nsamp = int(1E1)
 
-STATEDIR = "/Users/btimar/Dropbox/data/states/qutip"
-DATADIR = "/Users/btimar/Dropbox/data/random_unitary_data/from_qutip_states"
+STATEDIR = "/nfs/unity/unixhome/btimar/data/states/qutip"
+DATADIR = "/nfs/unity/unixhome/btimar/data/random_unitary_samples/from_qutip_states"
 
 with open( os.path.join(STATEDIR, 'settings.json')) as f:
     settings = json.load(f)
