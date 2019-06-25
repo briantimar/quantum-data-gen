@@ -1,17 +1,19 @@
 #!/bin/bash
 #SBATCH --job-name=sampling
 #SBATCH --nodes=20
-#SBATCH --ntasks=20
-#SBATCH --output=/home/btimar/data/python-multiproc.out
-#SBATCH --time=0:01:00
+#SBATCH --ntasks-per-node=1
+#SBATCH --output=/home/btimar/data/sampling.out
+#SBATCH --time=168:00:00
 
+date
 module load python
 python sampling_config.py
 
-for L in 2; do
-    for statename in "ghz"; do
+for L in 2 4 6 8 10; do
+    for statename in "tfim_ground" "rydberg_ground" "heisenberg_ground" "ghz"; do
         echo "Sampling from state $statename, L=$L"
-        python sample_state.py $L $statename
+        srun -N 1 -n 1 python sample_state.py $L $statename &
     done
 done
-    
+wait
+date
