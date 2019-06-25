@@ -44,11 +44,48 @@ def rydberg_hamiltonian_1d(L, Delta, Omega, V, ktrunc, bc='open'):
 def tfim_1d(L, hz, hz, J, bc='open'):
     """ A transverse-field ising model in one dimension.
     H = -hz sum(z) -hx sum(x) - Jsum(z_i z_i+1) """
-    hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L))
-    hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L))
+    hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L)])
+    hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L)])
     h = hx + hz
 
     coupmax = L-2 if bc=='open' else L-1
     for i in range(coupmax):
         h += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
     return h
+
+def heisenberg_1d(L, J, bc='open'):
+    """ A heisenberg model in one dimension.
+        H = -J sum si . s_i+1
+    """
+    coupmax = L-2 if bc=='open' else L-1
+    pauli_x = [ embed([qt.sigmax(), qt.sigmax()], L, [i, i+1]) for i in range(coupmax)]
+    pauli_y = [ embed([qt.sigmay(), qt.sigmay()], L, [i, i+1]) for i in range(coupmax)]
+    pauli_z = [ embed([qt.sigmaz(), qt.sigmaz()], L, [i, i+1]) for i in range(coupmax)]
+
+    return -J * (1/4) * (sum(pauli_x) + sum(pauli_y) + sum(pauli_z))
+
+
+# def xy_1d(L ):
+#     """ Returns local terms, without coupling coefficients, that make up the XY hamiltonian.
+#         returns: Hx, Hz, HPM
+#         Hx = list of pauli X's
+#         Hz = list of Pauli Z's
+#         HPM = list of sigma_plus * sigma_minus """
+
+#     I=qt.tensor([qt.qeye(2)] * N)
+#     c=list(it.combinations(range(N), 2))
+#     Hz,Hx, HPM=[0 * I for x in range(N)],[0 * I for x in range(N)], [0 * I for x in c]
+#     for i in range(N):
+#         l=[qt.qeye(2)] * N
+#         l[i]=qt.sigmaz()
+#         Hz[i]=qt.tensor(l).data.todense()
+#         l[i]=qt.sigmax()
+#         Hx[i]=qt.tensor(l).data.todense()
+#     for s in range(len(c)):
+#         i, j=c[s]
+#         l=[qt.qeye(2)] * N
+#         l[i]=qt.sigmap()
+#         l[j]=qt.sigmam()
+#         HPM[s]=qt.tensor(l).data.todense()
+#         HPM[s]+=np.conjugate(np.transpose(HPM[s]))
+#     return Hx,Hz, HPM
