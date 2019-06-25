@@ -6,7 +6,7 @@ from qutip_utils import get_random_local_measurements
 
 numpy_seed = 3
 np.random.seed(3)
-Nsamp = int(1E2)
+Nsamp = int(1E5)
 
 STATEDIR = "/Users/btimar/Dropbox/data/states/qutip"
 DATADIR = "/Users/btimar/Dropbox/data/random_unitary_data/from_qutip_states"
@@ -34,13 +34,16 @@ with open(os.path.join(DATADIR, 'settings.json'), 'w') as f:
                     state_names=state_names, state_dir=STATEDIR, Nsamp=Nsamp)
     json.dump(data_settings, f)
 
-for L in [2]:
-    for state_name in state_names:
-        print("Generating data for system size {0}, state {1}".format(
+def sample_from_state(L, state_name):
+    print("Generating data for system size {0}, state {1}".format(
                     L, state_name ))
-        psi = get_state(state_name, L)
-        settings, samples = get_random_local_measurements(psi, Nsamp)
+    psi = get_state(state_name, L)
+    settings, samples = get_random_local_measurements(psi, Nsamp)
 
-        path = get_output_path(state_name, L)
-        np.save(path + "_settings", settings)
-        np.save(path + "_samples", samples)
+    path = get_output_path(state_name, L)
+    np.save(path + "_settings", settings)
+    np.save(path + "_samples", samples)
+
+for L in system_sizes:
+    for state_name in state_names:
+        sample_from_state(L, state_name)
