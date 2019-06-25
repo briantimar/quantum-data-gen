@@ -16,7 +16,7 @@ def dist1d(i, j, L, bc='open'):
     raise NotImplementedError
 
 
-def rydberg_hamiltonian_1d(param_dict, bc='open'):
+def rydberg_hamiltonian_1d(param_dict):
     """ A 1d rydberg hamiltonian implemented as QObj.
         L: the number of qubits.
         Delta: the laser detuning / long. field
@@ -32,6 +32,7 @@ def rydberg_hamiltonian_1d(param_dict, bc='open'):
     Omega = param_dict['Omega']
     V = param_dict['V']
     ktrunc = param_dict['ktrunc']
+    bc = param_dict.get('bc', 'closed')
 
     #start with the laser terms
     h = sum([-Delta * embed([n()], L, [i]) for i in range(L)])
@@ -47,7 +48,7 @@ def rydberg_hamiltonian_1d(param_dict, bc='open'):
                 h += coupling * embed([n(), n()], L, [i, j])
     return h
 
-def tfim_1d(param_dict, bc='open'):
+def tfim_1d(param_dict):
     """ A transverse-field ising model in one dimension.
     H = -hz sum(z) -hx sum(x) - Jsum(z_i z_i+1) """
 
@@ -55,28 +56,35 @@ def tfim_1d(param_dict, bc='open'):
     hz = param_dict['hz']
     hx = param_dict['hx']
     J = param_dict['J']
+    bc = param_dict.get('bc', 'closed')
 
     Hz = sum( [ -hz * embed([qt.sigmaz()], L, [i]) for i in range(L)])
     Hx = sum( [ -hx * embed([qt.sigmax()], L, [i]) for i in range(L)])
     H = Hz + Hx
 
-    coupmax = L-2 if bc=='open' else L-1
+    coupmax = L-1 if bc=='open' else L
+    if bc =='closed' and L==2:
+        J = J/2
     for i in range(coupmax):
         H += -J * embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%L])
     return H
 
-def heisenberg_1d(param_dict, bc='open'):
+def heisenberg_1d(param_dict):
     """ A heisenberg model in one dimension.
         H = -J sum si . s_i+1
     """
 
     L = param_dict['L']
     J = param_dict['J']
+    bc = param_dict.get('bc', 'closed')
 
-    coupmax = L-2 if bc=='open' else L-1
-    pauli_x = [ embed([qt.sigmax(), qt.sigmax()], L, [i, i+1]) for i in range(coupmax)]
-    pauli_y = [ embed([qt.sigmay(), qt.sigmay()], L, [i, i+1]) for i in range(coupmax)]
-    pauli_z = [ embed([qt.sigmaz(), qt.sigmaz()], L, [i, i+1]) for i in range(coupmax)]
+    coupmax = L-1 if bc=='open' else L
+    pauli_x = [ embed([qt.sigmax(), qt.sigmax()], L, [i, (i+1)%2]) for i in range(coupmax)]
+    pauli_y = [ embed([qt.sigmay(), qt.sigmay()], L, [i, (i+1)%2]) for i in range(coupmax)]
+    pauli_z = [ embed([qt.sigmaz(), qt.sigmaz()], L, [i, (i+1)%2]) for i in range(coupmax)]
+
+    if bc=='closed' and L==2:
+        J = J/2
 
     return -J * (1/4) * (sum(pauli_x) + sum(pauli_y) + sum(pauli_z))
 
