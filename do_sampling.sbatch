@@ -9,10 +9,12 @@ date
 module load python
 python sampling_config.py
 
-for L in 2 4 6 8 10; do
+SEED=4
+
+for L in 2 4 6 8 ; do
     for statename in "tfim_ground" "rydberg_ground" "heisenberg_ground" "ghz"; do
         echo "Sampling from state $statename, L=$L"
-        srun -N 1 -n 1 python sample_state.py $L $statename &
+        srun -N 1 -n 1 python sample_state.py $L $statename $SEED &
     done
 done
 wait

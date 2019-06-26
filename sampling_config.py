@@ -4,8 +4,6 @@ import os
 import json
 from qutip_utils import get_random_local_measurements
 
-numpy_seed = 3
-np.random.seed(3)
 Nsamp = int(1E4)
 
 STATEDIR = "/home/btimar/data/states/qutip"
@@ -33,9 +31,10 @@ def write_config():
                         state_names=state_names, state_dir=STATEDIR, Nsamp=Nsamp)
         json.dump(data_settings, f)
 
-def sample_from_state(L, state_name):
+def sample_from_state(L, state_name, seed=0):
     print("Generating data for system size {0}, state {1}".format(
                     L, state_name ))
+    np.random.seed(seed)
     psi = get_state(state_name, L)
     settings, samples = get_random_local_measurements(psi, Nsamp)
 
