@@ -116,11 +116,10 @@ def get_H_XY_terms(N):
     return Hx,Hz, HPM
 
 
-def construct_XY_Hamiltonian(N):
+def construct_XY_Hamiltonian(param_dict):
     """Construct a matrix representation of the XY hamiltonian.
-    N: the system size.
     The interaction strengths are loaded from Jij_10.npy; hence system size can be at most 10"""
-
+    N = param_dict['N']
     if N > 10:
         raise ValueError("coupling strengths for N > 10 not provided")
         
@@ -146,7 +145,8 @@ def construct_XY_Hamiltonian(N):
 
 hamiltonian_constructors = { 'rydberg': rydberg_hamiltonian_1d, 
                               'tfim': tfim_1d, 
-                              'heisenberg': heisenberg_1d }
+                              'heisenberg': heisenberg_1d, 
+                              'xy': construct_XY_Hamiltonian }
 
 def get_hamiltonian(name, *args):
     if name not in hamiltonian_constructors.keys():
