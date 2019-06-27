@@ -119,7 +119,7 @@ def get_H_XY_terms(N):
 def construct_XY_Hamiltonian(param_dict):
     """Construct a matrix representation of the XY hamiltonian.
     The interaction strengths are loaded from Jij_10.npy; hence system size can be at most 10"""
-    N = param_dict['N']
+    N = param_dict['L']
     if N > 10:
         raise ValueError("coupling strengths for N > 10 not provided")
         
@@ -130,7 +130,7 @@ def construct_XY_Hamiltonian(param_dict):
     disorder=[0.]*N  # optional disorder potential (here put to zero)
 
     ### Construct the Jij matrix
-    Jij = np.load("Jij_10.npy")
+    Jij = np.load("/Users/btimar/Code/quantum-data-gen/Jij_10.npy")
 
     ### Construct the Hamiltonian
     H = sum([disorder[i]  * h for i,h in enumerate(Hz)], 0) # Local terms
@@ -140,8 +140,6 @@ def construct_XY_Hamiltonian(param_dict):
         H+=HPM[s]*(Jij[i,j]+Jij[j,i])
 
     return H
-
-
 
 hamiltonian_constructors = { 'rydberg': rydberg_hamiltonian_1d, 
                               'tfim': tfim_1d, 
