@@ -1,0 +1,1 @@
+{"params": {"rydberg": {"V": 1.0, "Delta": 0.2, "ktrunc": 2, "Omega": 0.2, "bc": "closed"}, "heisenberg": {"bc": "closed", "J": -1.0}, "tfim": {"hx": 0.6, "bc": "closed", "hz": 0.5, "J": 1.0}, "ghz": {}}, "state_names": ["tfim_ground", "rydberg_ground", "heisenberg_ground", "ghz"], "system_sizes": [2, 4, 6, 8, 10]}
