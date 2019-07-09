@@ -2,6 +2,8 @@ import qutip as qt
 import numpy as np
 import os
 import json
+import sys
+sys.path.append('..')
 from qutip_utils import get_random_local_measurements
 
 numpy_seed = 4
@@ -23,8 +25,9 @@ def get_state_path(system_size, time_index):
 def get_state(system_size, time_index):
     return qt.qload(get_state_path(system_size, time_index))
 
-def get_output_path(system_size, time_index):
-    return os.path.join(DATADIR, "xy_timeev_L={0}_tindex={1}".format(system_size, time_index))
+def get_output_path(system_size, time_index, Nsamp, seed):
+    return os.path.join(DATADIR, "xy_timeev_L={0}_tindex={1}_N={2}_seed={3}".format(
+        system_size, time_index, Nsamp,seed))
 
 def write_config():
     with open(os.path.join(DATADIR, 'settings.json'), 'w') as f:
@@ -33,14 +36,14 @@ def write_config():
                         numpy_seed=numpy_seed)
         json.dump(data_settings, f)
 
-def sample_from_state(L, tindex):
-    print("Generating data for system size {0}, time index {1}".format(
-                    L, tindex ))
+def sample_from_state(L, tindex, Nsamp, numpy_seed):
+    print("Generating {2} samples for system size {0}, time index {1}".format(
+                    L, tindex , Nsamp))
     np.random.seed(numpy_seed)
     psi = get_state(L, tindex)
     settings, samples = get_random_local_measurements(psi, Nsamp)
 
-    path = get_output_path(L, tindex)
+    path = get_output_path(L, tindex, Nsamp, numpy_seed)
     np.save(path + "_settings", settings)
     np.save(path + "_samples", samples)
 
