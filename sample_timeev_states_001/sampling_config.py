@@ -9,8 +9,8 @@ from qutip_utils import get_random_local_measurements
 numpy_seed = 4
 Nsamp = int(1E4)
 
-STATEDIR = "/Users/btimar/Dropbox/data/states/qutip/timeev/generate_timeev_states_001"
-DATADIR = "/Users/btimar/Dropbox/data/random_unitary_data/from_qutip_states/sample_timeev_states_001"
+STATEDIR = "/home/btimar/data/states/qutip/timeev/generate_timeev_states_001"
+DATADIR = "/home/btimar/data/random_unitary_data/from_qutip_states/sample_timeev_states_001"
 
 with open( os.path.join(STATEDIR, 'settings.json')) as f:
     settings = json.load(f)

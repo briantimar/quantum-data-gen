@@ -3,9 +3,9 @@ import sys
 import datetime
 
 if __name__ == '__main__':
-    L = sys.argv[0]
-    time_index = sys.argv[1]
-    N = sys.argv[2]
-    seed = sys.argv[3]
+    L = int(sys.argv[1])
+    time_index = int(sys.argv[2])
+    N = int(sys.argv[3])
+    seed = int(sys.argv[4])
     sample_from_state(L, time_index, N, seed)
 
