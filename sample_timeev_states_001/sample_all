@@ -1,0 +1,18 @@
+#!/bin/bash
+#SBATCH --time=24:00:00
+
+Lvals=( 6 8 10 )
+sampleSize=1000
+samplesPerState=50
+
+for L in ${Lvals[@]}
+do
+    for tindex in {0..4}
+    do
+        for (( i=0; i<$samplesPerState; i++))
+        do
+            seed=$i
+            sbatch -n 1 -N 1 sample_one.sbatch $L $tindex $sampleSize $seed
+        done
+    done
+done
