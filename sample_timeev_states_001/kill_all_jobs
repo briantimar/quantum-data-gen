@@ -1,0 +1,8 @@
+#!/bin/bash
+
+squeue | grep btimar | 
+while read jobname junk
+do
+	echo "Terminating job $jobname"
+	scancel $jobname
+done

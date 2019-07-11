@@ -1,9 +1,10 @@
 #!/bin/bash
-#SBATCH --time=24:00:00
 
-Lvals=( 6 8 10 )
+Lvals=( 10 )
 sampleSize=1000
 samplesPerState=50
+
+SLURM_DIR="/home/btimar/Code/quantum-data-gen/sample_timeev_states_001/slurm_logs"
 
 for L in ${Lvals[@]}
 do
@@ -12,7 +13,9 @@ do
         for (( i=0; i<$samplesPerState; i++))
         do
             seed=$i
-            sbatch -n 1 -N 1 sample_one.sbatch $L $tindex $sampleSize $seed
+            sbatch -n 1 -N 1 --account=def-rgmelko --time=12:00:00 \
+	    --output="$SLURM_DIR/log_L=$L_tindex=$tindex_seed=$seed.out"\
+	    sample_one.sbatch $L $tindex $sampleSize $seed
         done
     done
 done
